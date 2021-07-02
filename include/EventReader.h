@@ -40,6 +40,7 @@ class EventReader : public G4VUserPrimaryGeneratorAction {
     int fUseBeam;
     double fBeamE,fvertexRotY;
     double fvertexPosX,fvertexPosY,fvertexPosZ;
+    double fvertexSmearXY,fvertexSmearZ;
 };
 
 #endif

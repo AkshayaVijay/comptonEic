@@ -14,6 +14,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4Event.hh"
+#include "Randomize.hh"
 
 //local headers
 #include "EventReader.h"
@@ -28,7 +29,8 @@ using namespace std;
 EventReader::EventReader(DetectorConstruction *dc) : 
   G4VUserPrimaryGeneratorAction(), fIev(0), 
   fUseBeam(0), fBeamE(5*GeV), fvertexRotY(0.0103371112*rad)
-  ,fvertexPosX(0), fvertexPosY(0), fvertexPosZ(0){
+  ,fvertexPosX(0), fvertexPosY(0), fvertexPosZ(0)
+  ,fvertexSmearXY(0),fvertexSmearZ(0){
 
   //default input name
   fInputName = "events.dat";
@@ -45,6 +47,8 @@ EventReader::EventReader(DetectorConstruction *dc) :
   fMsg->DeclarePropertyWithUnit("vertexPosY", "cm",fvertexPosY,"initial vertex position y");
   fMsg->DeclarePropertyWithUnit("vertexPosZ", "cm",fvertexPosZ,"initial vertex position z");
   fMsg->DeclarePropertyWithUnit("vertexRotY", "rad",fvertexRotY,"momentum direction rotation");
+  fMsg->DeclarePropertyWithUnit("vertexSmearXY", "cm",fvertexSmearXY,"trasnverse vertex smearing width");
+  fMsg->DeclarePropertyWithUnit("vertexSmearZ" , "cm",fvertexSmearZ ,"longitudinal vertex smearing width");
 
 }//EventReader
 
@@ -57,9 +61,19 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
   }
 
+  //G4cout<<fvertexSmearXY<<" "<<fvertexSmearZ<<"\n"<<fvertexPosX<<" "<<fvertexPosY<<" "<<fvertexPosZ<<G4endl;
+  G4double smearedVx(fvertexPosX),smearedVy(fvertexPosY),smearedVz(fvertexPosZ);
+  if(fvertexSmearXY!=0){
+    smearedVx = G4RandGauss::shoot(fvertexPosX,fvertexSmearXY);
+    smearedVy = G4RandGauss::shoot(fvertexPosY,fvertexSmearXY);
+  }
+  if(fvertexSmearZ!=0){
+    smearedVz = G4RandGauss::shoot(fvertexPosZ,fvertexSmearZ);
+  }
+
   if(fUseBeam){
 
-    G4PrimaryVertex *vtx = new G4PrimaryVertex(fvertexPosX, fvertexPosY, fvertexPosZ, 0);
+    G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
     G4ThreeVector momDir(0,0,1);
     momDir.rotateY(fvertexRotY);
 
@@ -90,7 +104,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     fDetConst->getMCEvent()->SetPolXsec(pXsec);
     fDetConst->getMCEvent()->SetUnpolXsec(uXsec);
 
-    G4PrimaryVertex *vtx = new G4PrimaryVertex(fvertexPosX,fvertexPosY,fvertexPosZ, 0);
+    G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
     const int partID[2]={22,11};
     for(int i=0;i<2;i++){
       G4ThreeVector mom(partMomX[i]*GeV,partMomY[i]*GeV,partMomZ[i]*GeV);
