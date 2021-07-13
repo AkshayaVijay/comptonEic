@@ -7,8 +7,19 @@ R__LOAD_LIBRARY(../build/libdet.so)
 void processTree(string,float,float,float,float,int);
 void drawGdet(string,int);
 void draw1DallE();
+void analyzePhotonDetAll();
 
 void analyzePhotonDet(){
+
+  eEnergy = 18e9;
+  recalcMaxEnergy();  
+  processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz71Px71_5e6.root",
+	      502, 522, -10, 10,int(eEnergy/1e9));
+  
+  //analyzePhotonDetAll();
+}
+
+void analyzePhotonDetAll(){
 
   const int processTrees = 0;
   const int draw = 1; 
@@ -16,21 +27,28 @@ void analyzePhotonDet(){
   eEnergy = 18e9;
   recalcMaxEnergy();  
   if(processTrees)
-    processTree("../output/o_e18Px100_5e6.root",
-		506, 518, -6, 6,int(eEnergy/1e9));
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Px100_5e6.root",
+  		506, 518, -6, 6,int(eEnergy/1e9));
   if(draw)
     drawGdet("../output/o_e18Px100_5e6_gDet.root", int(eEnergy/1e9));
 
   if(processTrees)
-    processTree("../output/o_e18Pz71Px71_5e6.root",
-		506, 518, -6, 6,int(eEnergy/1e9));
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz71Px71_5e6.root",
+  		506, 518, -6, 6,int(eEnergy/1e9));
   if(draw)
     drawGdet("../output/o_e18Pz71Px71_5e6_gDet.root", int(eEnergy/1e9));
+
+  if(processTrees)
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz71Px71_VtxSmearXY01Z9mm_5e6.root",
+		506, 518, -6, 6,int(eEnergy/1e9));
+  if(draw)
+    drawGdet("../output/o_e18Pz71Px71_VtxSmearXY01Z9mm_5e6_gDet.root", int(eEnergy/1e9));
+
 
   eEnergy = 10e9;
   recalcMaxEnergy();  
   if(processTrees)
-    processTree("../output/o_e10Pz91Px42_5e6.root",
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e10Pz91Px42_5e6.root",
 		504, 520, -8, 8,int(eEnergy/1e9));
   if(draw)
     drawGdet("../output/o_e10Pz91Px42_5e6_gDet.root", int(eEnergy/1e9));
@@ -38,19 +56,22 @@ void analyzePhotonDet(){
   eEnergy = 5e9;
   recalcMaxEnergy();  
   if(processTrees)
-    processTree("../output/o_e5Px100_5e6.root",
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Px100_5e6.root",
 		502, 522, -10, 10,int(eEnergy/1e9));
   if(draw)
     drawGdet("../output/o_e5Px100_5e6_gDet.root", int(eEnergy/1e9));
 
   if(processTrees)
-    processTree("../output/o_e5Pz98Px22_5e6.root",
+    processTree("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz98Px22_5e6.root",
 		502, 522, -10, 10,int(eEnergy/1e9));
   if(draw)
     drawGdet("../output/o_e5Pz98Px22_5e6_gDet.root", int(eEnergy/1e9));
 
   if(draw)
-    draw1DallE();
+    drawGdet("../output/o_e5Pz98Px22_VtxSmearXY01Z7mm_5e6_gDet.root", int(eEnergy/1e9));
+
+  if(draw)
+  draw1DallE();
 }
 
 void processTree(string fnm="../output/o_e18Px100_5e6.root",

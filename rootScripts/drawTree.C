@@ -1,23 +1,5 @@
 #include "anaConst.h"
 
-// const int nXsec=2;
-// const string xSecNm[nXsec]={"uX","pX"};
-// const string xSecTi[nXsec]={"#sigma_{unpol}","#sigma_{pol}"};
-// TH1D *hXsec[nXsec], *iXsec[nXsec];
-
-// const int nDet = 8;
-// const double zPos[nDet]={0.05,5,6.5,16,16.7,25,27,27.7};//m
-
-
-// double partXBinLimit[nPart][2]={{-48.5,-47.5},{-10,12}};
-// double partYBinLimit[nPart][2]={{-1,1},{-0.07,0.07}};
-// TH2D *xy[nPart][nDet][nWght];
-// const int nSeg=9;
-// const double seg[nSeg]={500,400,300,200,100,50,10,5,1};
-// const double segL[nSeg]={0.10,0.08,0.09,0.08,0.08,0.08,0.08,0.08,0.08};
-// TH1D *yElec[nWght][nSeg];
-
-
 const int nDet = 6;
 const double zPos[nDet]={0.7,3.9,4.9,9.1,10.1,31.6};
 const string detNm[nDet]={  "bD22EF","aD22EF",  "aQ10EF", "bQ9EF",  "aQ9EF",  "gDet"};
@@ -39,20 +21,11 @@ void drawGdet(int ene);
 
 void drawTree(){
 
-  //finC=TFile::Open("../output/o_e18Px100_5e6.root");
-  //finC=TFile::Open("../output/o_e5Px100_5e6.root");
-
-  //finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz98Px22_5e6.root");
-  //finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e10Pz91Px42_5e6.root");
   finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz71Px71_5e6.root");
-  //finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz71Px71_VtxSmearXY01Z9mm_5e6.root");
-  //finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz98Px22_VtxSmearXY01Z7mm_5e6.root");
-  //finC=TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e10Pz91Px42_VtxSmearXY01Z7mm_5e6.root");
-
   finB=TFile::Open("../output/beam18GeV_1e3.root");
   
-  drawEdet(18);
-  //drawGdet(5);
+  //drawEdet(18);
+  drawGdet(18);
 }
 
 void drawAllDets(int ene){
