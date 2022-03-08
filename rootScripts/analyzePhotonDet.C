@@ -71,7 +71,7 @@ void analyzePhotonDetAll(){
     drawGdet("../output/o_e5Pz98Px22_VtxSmearXY01Z7mm_5e6_gDet.root", int(eEnergy/1e9));
 
   if(draw)
-  draw1DallE();
+    draw1DallE();
 }
 
 void processTree(string fnm="../output/o_e18Px100_5e6.root",
