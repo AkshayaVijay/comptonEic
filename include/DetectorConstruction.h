@@ -45,10 +45,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
     MCEvent *fMC; // generated particles
 
   G4String magFile;
+  G4double fbeamE;
+  G4bool quadPartTransparency;
+
     G4GenericMessenger *fMsg; // messenger for detectors and components
     G4bool fIncMagnet; // flag for spectrometer magnet
     G4bool fIncB2eR; // beamline dipole magnet
     G4bool fIncQF1;//beamline Quadrupole 
+    
+    G4bool drillQuadHoles; //should we drill holes in the quads?
 
 };
 

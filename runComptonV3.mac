@@ -1,0 +1,28 @@
+/EPol/construct/magFile ip6V3_polarimeter_magnet.dat
+#/EPol/input/name /volatile/halla/moller12gev/ciprian/tmp/compton/e18GeV_g532nm_Pz95Pxm31_1e6.cr
+/EPol/input/name /volatile/halla/moller12gev/ciprian/tmp/compton/e5GeV_g532nm_Pz99Pxm9_1e6.cr
+
+/EPol/construct/beamEnergy 5 GeV
+/EPol/construct/quadHoles false
+/EPol/construct/quadPartTransparency true
+
+#detectors and components
+/EPol/input/vertexPosX 0.246 m
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ 85.8796 m
+/EPol/input/vertexRotY 0.00024298 rad
+
+## trasnverse size comes from photon beam
+/EPol/input/vertexSmearXY 0.0 cm
+
+## longitudinal size comes from electron beam
+# 5,10 GeV
+#/EPol/input/vertexSmearZ 0.7 cm
+## 18 GeV
+/EPol/input/vertexSmearZ 0. cm
+
+# Initialize kernel
+/run/initialize
+/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz99Pxm9_ip6V3_VtxSmearXY0Z0_1e6.root
+/run/beamOn 1000000
+

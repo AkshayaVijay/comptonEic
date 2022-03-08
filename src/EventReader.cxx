@@ -28,7 +28,7 @@ using namespace std;
 //_____________________________________________________________________________
 EventReader::EventReader(DetectorConstruction *dc) : 
   G4VUserPrimaryGeneratorAction(), fIev(0), 
-  fUseBeam(0), fBeamE(5*GeV), fvertexRotY(0.0103371112*rad)
+  fUseBeam(0), fBeamE(18*GeV), fvertexRotY(0.0103371112*rad)
   ,fvertexPosX(0), fvertexPosY(0), fvertexPosZ(0)
   ,fvertexSmearXY(0),fvertexSmearZ(0){
 
@@ -74,7 +74,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
   if(fUseBeam){
 
     G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
-    G4ThreeVector momDir(0,0,1);
+    G4ThreeVector momDir(0,0,-1);
     momDir.rotateY(fvertexRotY);
 
     G4PrimaryParticle *part=new G4PrimaryParticle(11);
@@ -108,7 +108,7 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     const int partID[2]={22,11};
     for(int i=0;i<2;i++){
       G4ThreeVector mom(partMomX[i]*GeV,partMomY[i]*GeV,partMomZ[i]*GeV);
-      mom.rotateY(fvertexRotY);
+      mom.rotateY(fvertexRotY + acos(-1));
 
       G4PrimaryParticle *part = new G4PrimaryParticle(partID[i],mom.x(),mom.y(),mom.z(),partE[i]*GeV);
       vtx->SetPrimary(part);

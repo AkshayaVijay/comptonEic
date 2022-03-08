@@ -1,0 +1,22 @@
+
+#run macro for local testing
+/EPol/construct/magFile ip6V3_polarimeter_magnet.dat
+/EPol/construct/beamEnergy 5 GeV
+/EPol/input/beamEnergy 5 GeV
+
+/EPol/construct/quadHoles false
+/EPol/construct/quadPartTransparency true
+
+#detectors and components
+/EPol/input/useBeam 1
+/EPol/input/vertexPosX 0.246 m
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ 85.8796 m
+/EPol/input/vertexRotY 0.00024298 rad
+
+
+# Initialize kernel
+/run/initialize
+/compton/output/name beam5GeV_ip6V3_1e3.root
+/run/beamOn 1000
+
