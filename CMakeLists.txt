@@ -2,6 +2,8 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(pdet)
 
+set(CMAKE_CXX_STANDARD 14)
+
 #shared library
 set (LIB det)
 
