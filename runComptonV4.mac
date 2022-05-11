@@ -1,0 +1,47 @@
+/EPol/construct/magFile ip6V3_polarimeter_magnet.dat
+/EPol/input/name /volatile/halla/moller12gev/ciprian/tmp/compton/e18GeVPz59Pxm81_g532nm_1e6.cr
+
+/EPol/construct/beamEnergy 18 GeV
+/EPol/construct/quadHoles false
+/EPol/construct/quadPartTransparency true
+
+#before Q6 detector
+/EPol/input/vertexPosX 0.4184 m
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ 72.081 m
+/EPol/input/vertexRotY -0.01527 rad
+
+/EPol/input/vertexSmearX 0.492 mm
+/EPol/input/vertexSmearCorrY -0.16 mrad
+
+/EPol/input/vertexSmearY 0.099 mm
+/EPol/input/vertexSmearCorrX -0.06 mrad
+
+
+## longitudinal size comes from electron beam
+# 5,10 GeV
+#/EPol/input/vertexSmearZ 0.7 cm
+## 18 GeV
+/EPol/input/vertexSmearZ 0. cm
+
+# Initialize kernel
+/run/initialize
+
+
+
+# inactivate processes depending on what you want
+/process/activate SynRad
+/process/inactivate msc
+/process/inactivate eIoni
+/process/inactivate eBrem
+/process/inactivate annihil
+/process/inactivate phot
+/process/inactivate compt
+/process/inactivate conv
+/process/inactivate Rayl
+
+
+#/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_noSync_VtxSmearX0Y0Z0_1e6.root
+/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_Sync_VtxSmearX492Pxm16Y99Pym06Z0_1e6.root
+/run/beamOn 1000000
+

@@ -1,0 +1,42 @@
+
+#run macro for local testing
+/EPol/construct/magFile ip6V3_polarimeter_magnet.dat
+/EPol/construct/beamEnergy 18 GeV
+/EPol/input/beamEnergy 18 GeV
+
+/EPol/construct/quadHoles false
+/EPol/construct/quadPartTransparency true
+
+/EPol/input/useBeam 1
+/EPol/input/vertexPosX 0.4184 m
+
+/EPol/input/vertexSmearX 0.492 mm
+/EPol/input/vertexSmearCorrY -0.16 mrad
+
+/EPol/input/vertexSmearY 0.099 mm
+/EPol/input/vertexSmearCorrX -0.06 mrad
+
+/EPol/input/vertexPosY 0 cm
+/EPol/input/vertexPosZ 72.081 m
+/EPol/input/vertexRotY -0.01527 rad
+
+# Initialize kernel
+/run/initialize
+
+
+# inactivate other processes depending on what you want
+/process/activate SynRad
+/process/inactivate msc
+/process/inactivate eIoni
+/process/inactivate eBrem
+/process/inactivate annihil
+/process/inactivate phot
+/process/inactivate compt
+/process/inactivate conv
+/process/inactivate Rayl
+
+
+
+/compton/output/name beam18GeV_ip6V4_Sync_smearXY_1e6.root
+/run/beamOn 1000000
+
