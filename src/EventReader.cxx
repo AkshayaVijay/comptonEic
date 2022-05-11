@@ -30,7 +30,9 @@ EventReader::EventReader(DetectorConstruction *dc) :
   G4VUserPrimaryGeneratorAction(), fIev(0), 
   fUseBeam(0), fBeamE(18*GeV), fvertexRotY(0.0103371112*rad)
   ,fvertexPosX(0), fvertexPosY(0), fvertexPosZ(0)
-  ,fvertexSmearXY(0),fvertexSmearZ(0){
+  ,fvertexSmearX(0),fvertexSmearY(0)
+  ,fvertexSmearCorrX(0),fvertexSmearCorrY(0)
+  ,fvertexSmearZ(0){
 
   //default input name
   fInputName = "events.dat";
@@ -47,7 +49,10 @@ EventReader::EventReader(DetectorConstruction *dc) :
   fMsg->DeclarePropertyWithUnit("vertexPosY", "cm",fvertexPosY,"initial vertex position y");
   fMsg->DeclarePropertyWithUnit("vertexPosZ", "cm",fvertexPosZ,"initial vertex position z");
   fMsg->DeclarePropertyWithUnit("vertexRotY", "rad",fvertexRotY,"momentum direction rotation");
-  fMsg->DeclarePropertyWithUnit("vertexSmearXY", "cm",fvertexSmearXY,"trasnverse vertex smearing width");
+  fMsg->DeclarePropertyWithUnit("vertexSmearX", "cm",fvertexSmearX,"trasnverseX vertex smearing width");
+  fMsg->DeclarePropertyWithUnit("vertexSmearY", "cm",fvertexSmearY,"trasnverseY vertex smearing width");
+  fMsg->DeclarePropertyWithUnit("vertexSmearCorrX", "rad",fvertexSmearCorrX,"trasnverseX vertex smearing pos-ang corr [rad/mm]");
+  fMsg->DeclarePropertyWithUnit("vertexSmearCorrY", "rad",fvertexSmearCorrY,"trasnverseY vertex smearing pos-ang corr [rad/mm]");
   fMsg->DeclarePropertyWithUnit("vertexSmearZ" , "cm",fvertexSmearZ ,"longitudinal vertex smearing width");
 
 }//EventReader
@@ -63,9 +68,11 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
 
   //G4cout<<fvertexSmearXY<<" "<<fvertexSmearZ<<"\n"<<fvertexPosX<<" "<<fvertexPosY<<" "<<fvertexPosZ<<G4endl;
   G4double smearedVx(fvertexPosX),smearedVy(fvertexPosY),smearedVz(fvertexPosZ);
-  if(fvertexSmearXY!=0){
-    smearedVx = G4RandGauss::shoot(fvertexPosX,fvertexSmearXY);
-    smearedVy = G4RandGauss::shoot(fvertexPosY,fvertexSmearXY);
+  if(fvertexSmearX!=0){
+    smearedVx = G4RandGauss::shoot(fvertexPosX,fvertexSmearX);
+  }
+  if(fvertexSmearY!=0){
+    smearedVy = G4RandGauss::shoot(fvertexPosY,fvertexSmearY);
   }
   if(fvertexSmearZ!=0){
     smearedVz = G4RandGauss::shoot(fvertexPosZ,fvertexSmearZ);
@@ -75,7 +82,10 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
 
     G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
     G4ThreeVector momDir(0,0,-1);
-    momDir.rotateY(fvertexRotY);
+    double corrY = fvertexSmearCorrY * (smearedVx - fvertexPosX);
+    double corrX = fvertexSmearCorrX * (smearedVy - fvertexPosY);
+    momDir.rotateY(fvertexRotY+corrY);
+    momDir.rotateX(corrX);
 
     G4PrimaryParticle *part=new G4PrimaryParticle(11);
     part->SetMomentumDirection(momDir);
@@ -105,10 +115,14 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     fDetConst->getMCEvent()->SetUnpolXsec(uXsec);
 
     G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
+    double corrY = fvertexSmearCorrY * (smearedVx - fvertexPosX);
+    double corrX = fvertexSmearCorrX * (smearedVy - fvertexPosY);
+
     const int partID[2]={22,11};
     for(int i=0;i<2;i++){
       G4ThreeVector mom(partMomX[i]*GeV,partMomY[i]*GeV,partMomZ[i]*GeV);
-      mom.rotateY(fvertexRotY + acos(-1));
+      mom.rotateY(fvertexRotY + acos(-1) + corrY);
+      mom.rotateX(corrX);
 
       G4PrimaryParticle *part = new G4PrimaryParticle(partID[i],mom.x(),mom.y(),mom.z(),partE[i]*GeV);
       vtx->SetPrimary(part);

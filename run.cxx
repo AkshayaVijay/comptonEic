@@ -14,6 +14,7 @@
 #include "G4UImanager.hh"
 #include "FTFP_BERT.hh"
 #include "G4OpticalPhysics.hh"
+#include "PhysicsList.h"
 
 //local headers
 #include "DetectorConstruction.h"
@@ -59,6 +60,8 @@ int main(int argc, char* argv[]) {
   //G4OpticalPhysics *opt = new G4OpticalPhysics();
   //physicsList->RegisterPhysics(opt); // uncomment to turn optics on
   runManager->SetUserInitialization(physicsList);
+
+  runManager->SetUserInitialization(new PhysicsList);//enable SyncRad
 
   //action
   runManager->SetUserInitialization(new ActionInitialization(detConst));
