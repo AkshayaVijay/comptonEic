@@ -1,16 +1,16 @@
 TGraphErrors *procE(TH1F*,int);
 TH1F *procG(TH1F*,int);
 
-void drawV3(){
-  // TFile* f0 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz99Pxm9_ip6V3_VtxSmearXY0Z0_1e6_1Dana.root","READ");
-  // TFile* f1 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e5Pz97Pxm26_ip6V3p1_VtxSmearXY0Z0_1e6_1Dana.root","READ");
-  TFile* f0 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz95Pxm31_ip6V3_VtxSmearXY0Z0_1e6_1Dana.root","READ");
-  //TFile* f0 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_VtxSmearX0Y0Z0_1e6_1Dana.root","READ");
-  TFile* f1 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V3p1_VtxSmearXY0Z0_1e6_1Dana.root","READ");
+void drawV4(){
+  //TFile* f0 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_noSync_VtxSmearX0Y0Z0_1e6_1Dana.root","READ");
+  //TFile* f1 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V3p1_VtxSmearXY0Z0_1e6_1Dana.root","READ");
+  //TFile* f1 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_VtxSmearX492Pxm16Y0Z0_1e6_1Dana.root","READ");
+  TFile* f0 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_noSync_VtxSmearX492Pxm16Y99Pym06Z0_1e6_1Dana.root","READ");
+  TFile* f1 = TFile::Open("/volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_Sync_VtxSmearX492Pxm16Y99Pym06Z0_1e6_1Dana.root","READ");
 
-  TH1F *e0=(TH1F*)f0->Get("exp_q07US");
+  TH1F *e0=(TH1F*)f0->Get("exp_q04US");
   if(!e0) return;
-  TGraphErrors *ge0=procE(e0,0);
+  TGraphErrors *ge0=procE(e0,1);
   TH1F *e1=(TH1F*)f1->Get("exp_q04US");
   if(!e1) return;
   TGraphErrors *ge1=procE(e1,1);
@@ -18,6 +18,8 @@ void drawV3(){
   c1->Divide(2);
   c1->cd(1);
   e0->DrawCopy("hist");
+  gPad->SetGridx(1);
+  gPad->SetGridy(1);
   c1->cd(2);
   e1->SetLineColor(2);
   e1->DrawCopy("hist");
@@ -41,6 +43,8 @@ void drawV3(){
   c3->Divide(2);
   c3->cd(1);
   g0->DrawCopy("hist");
+  gPad->SetGridx(1);
+  gPad->SetGridy(1);
   c3->cd(2);
   g1->SetLineColor(2);
   g1->DrawCopy("hist");
@@ -94,7 +98,7 @@ TGraphErrors *procE(TH1F *ex, int flip){
 
 TH1F *procG(TH1F *gx,int v){
   TH1F *gr=new TH1F(Form("proc_%s_%d",gx->GetName(),v),gx->GetTitle(),
-		    600,-10,10);
+		    600,-30,30);
   int nB=gx->GetXaxis()->GetNbins();
   cout<<gx->GetName()<<" "<<nB<<endl;
   for(int i=1;i<=nB;i++){

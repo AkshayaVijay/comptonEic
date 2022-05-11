@@ -1,7 +1,9 @@
+void drawSmearXY(TTree*,TCanvas*);
+
 void drawBeamXY(){
   //TFile *fin=TFile::Open("beam18GeV_ip6V2_1e3.root","READ");
   //TFile *fin=TFile::Open("beam18GeV_ip6V3_1e3.root","READ");
-  TFile *fin=TFile::Open("../beam18GeV_ip6V3p1_1e3.root","READ");
+  TFile *fin=TFile::Open("../beam18GeV_ip6V4_noSync_1e3.root","READ");
   //TFile *fin=TFile::Open("beam5GeV_ip6V3_1e3.root","READ");
   TTree *t=(TTree*)fin->Get("t");
   gStyle->SetOptStat("em");
@@ -14,5 +16,27 @@ void drawBeamXY(){
     c1->cd(i+1);
     t->Draw(Form("%s_hits.x-%f",detNm[i].c_str(),xPos[i]));
   }
+
+  auto *c2=new TCanvas("c2","c2",900,1800);
+  drawSmearXY(t,c2);
   fin->Close();
+}
+
+void drawSmearXY(TTree *t, TCanvas *c){
+  gStyle->SetOptStat("mr");
+  c->Divide(2,3);
+  c->cd(1);
+  t->Draw("q06US_hits.y:q06US_hits.x","","colz");
+  c->cd(3);
+  t->Draw("q06US_hits.y","","");
+  c->cd(5);
+  t->Draw("q06US_hits.x","","");
+
+  c->cd(2);
+  t->Draw("q04US_hits.y:q04US_hits.x","","colz");
+  c->cd(4);
+  t->Draw("q04US_hits.y","","");
+  c->cd(6);
+  t->Draw("q04US_hits.x","","");
+
 }

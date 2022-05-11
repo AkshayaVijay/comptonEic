@@ -17,6 +17,6 @@
 
 # Initialize kernel
 /run/initialize
-/compton/output/name beam5GeV_ip6V3_1e3.root
+/compton/output/name beam5GeV_ip6V3_SR_1e3.root
 /run/beamOn 1000
 
