@@ -8,24 +8,31 @@
 /EPol/construct/quadPartTransparency true
 
 /EPol/input/useBeam 1
-/EPol/input/vertexPosX 0.4184 m
-
-/EPol/input/vertexSmearX 0.492 mm
-/EPol/input/vertexSmearCorrY -0.16 mrad
-
-/EPol/input/vertexSmearY 0.099 mm
-/EPol/input/vertexSmearCorrX -0.06 mrad
-
+/EPol/input/vertexPosX 0.3985 m
 /EPol/input/vertexPosY 0 cm
-/EPol/input/vertexPosZ 72.081 m
+/EPol/input/vertexPosZ 73.4 m
 /EPol/input/vertexRotY -0.01527 rad
+
+##high divergence
+/EPol/input/beamEmmX 24 nm
+/EPol/input/beamEmmY  2 nm
+##high acceptance
+#/EPol/input/beamEmmX 24 nm
+#/EPol/input/beamEmmY  1.2 nm
+
+/EPol/input/laserXYwidth 0.1 mm
+/EPol/input/vertexBetaX 5.39 m
+/EPol/input/vertexAlphaX -1.45 
+/EPol/input/vertexBetaY 10.1 m
+/EPol/input/vertexAlphaY  2.42
+
 
 # Initialize kernel
 /run/initialize
 
 
 # inactivate other processes depending on what you want
-/process/activate SynRad
+/process/inactivate SynRad
 /process/inactivate msc
 /process/inactivate eIoni
 /process/inactivate eBrem
@@ -37,6 +44,8 @@
 
 
 
-/compton/output/name beam18GeV_ip6V4_Sync_smearXY_1e6.root
-/run/beamOn 1000000
+/compton/output/name beam18GeV_ip6V4_noSync_smearXY_1e3.root
+/run/beamOn 10000
+# /compton/output/name beam18GeV_ip6V4_Sync_smearXY_1e6.root
+# /run/beamOn 1000000
 

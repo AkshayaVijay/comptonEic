@@ -37,12 +37,16 @@ class EventReader : public G4VUserPrimaryGeneratorAction {
     int fIev; // event number for progress printout
     DetectorConstruction *fDetConst;
 
-    int fUseBeam;
-    double fBeamE,fvertexRotY;
-    double fvertexPosX,fvertexPosY,fvertexPosZ;
-    double fvertexSmearX,fvertexSmearY;
-    double fvertexSmearCorrX,fvertexSmearCorrY;
-    double fvertexSmearZ;
+    G4int fUseBeam;
+    G4double fBeamE,fvertexRotY;
+    G4double fvertexPosX,fvertexPosY,fvertexPosZ;
+    G4double fEmmX, fEmmY;
+    G4double flaserXY;
+    G4double fvertexAlphaX,fvertexAlphaY;
+    G4double fvertexBetaX,fvertexBetaY;
+    G4double fvertexSmearX,fvertexSmearY;
+    G4double fvertexSmearXp,fvertexSmearYp;
+    G4double fvertexSmearZ;
 };
 
 #endif

@@ -1,22 +1,36 @@
 /EPol/construct/magFile ip6V3_polarimeter_magnet.dat
-/EPol/input/name /volatile/halla/moller12gev/ciprian/tmp/compton/e18GeVPz59Pxm81_g532nm_1e6.cr
+/EPol/input/name ../comptonRad/e18GeVPz59Pxm81_g532_1e6.cr
 
 /EPol/construct/beamEnergy 18 GeV
 /EPol/construct/quadHoles false
 /EPol/construct/quadPartTransparency true
 
+##high divergence
+/EPol/input/beamEmmX 24 nm
+/EPol/input/beamEmmY  2 nm
+##high acceptance
+#/EPol/input/beamEmmX 24 nm
+#/EPol/input/beamEmmY  1.2 nm
+
 #before Q6 detector
-/EPol/input/vertexPosX 0.4184 m
+# /EPol/input/vertexPosX 0.4184 m
+# /EPol/input/vertexPosY 0 cm
+# /EPol/input/vertexPosZ 72.081 m
+# /EPol/input/vertexRotY -0.01527 rad
+# /EPol/input/vertexBetaX 10.3 m
+# /EPol/input/vertexBetaY 6.09 m
+# /EPol/input/vertexAlphaX -0.726 
+# /EPol/input/vertexAlphaY  1.29
+
+#mid-quad distance
+/EPol/input/vertexPosX 0.3985 m
 /EPol/input/vertexPosY 0 cm
-/EPol/input/vertexPosZ 72.081 m
+/EPol/input/vertexPosZ 73.4 m
 /EPol/input/vertexRotY -0.01527 rad
-
-/EPol/input/vertexSmearX 0.492 mm
-/EPol/input/vertexSmearCorrY -0.16 mrad
-
-/EPol/input/vertexSmearY 0.099 mm
-/EPol/input/vertexSmearCorrX -0.06 mrad
-
+/EPol/input/vertexBetaX 5.39 m
+/EPol/input/vertexAlphaX -1.45 
+/EPol/input/vertexBetaY 10.1 m
+/EPol/input/vertexAlphaY  2.42
 
 ## longitudinal size comes from electron beam
 # 5,10 GeV
@@ -27,10 +41,8 @@
 # Initialize kernel
 /run/initialize
 
-
-
 # inactivate processes depending on what you want
-/process/activate SynRad
+/process/inactivate SynRad
 /process/inactivate msc
 /process/inactivate eIoni
 /process/inactivate eBrem
@@ -42,6 +54,6 @@
 
 
 #/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_noSync_VtxSmearX0Y0Z0_1e6.root
-/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_Sync_VtxSmearX492Pxm16Y99Pym06Z0_1e6.root
+/compton/output/name /volatile/halla/moller12gev/ciprian/tmp/compton/o_e18Pz59Pxm81_ip6V4_noSync_smearXY_1e6v5.root
 /run/beamOn 1000000
 

@@ -189,6 +189,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
   AddDetector(new genericDet("q08DS",2.939e+2 ,0, 8.0230e+4, 1.527e-2 ,800,1, top_l));
   AddDetector(new genericDet("q07US",3.504e+2 ,0, 7.6530e+4, 1.527e-2 ,800,1, top_l));
   AddDetector(new genericDet("q07DS",3.703e+2 ,0, 7.5230e+4, 1.527e-2 ,800,1, top_l));
+
+  AddDetector(new genericDet("vtx",4e+2 ,0, 7.33e+4, 1.527e-2 ,800,1, top_l));
+
   AddDetector(new genericDet("q06US",4.268e+2 ,0, 7.1531e+4, 1.527e-2 ,800,1, top_l));
   AddDetector(new genericDet("q06DS",4.466e+2 ,0, 7.0231e+4, 1.527e-2 ,800,1, top_l));
   AddDetector(new genericDet("q05US",4.763e+2 ,0, 6.6531e+4, 7.843e-4 ,800,1, top_l));

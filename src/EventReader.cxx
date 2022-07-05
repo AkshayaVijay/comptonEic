@@ -23,6 +23,8 @@
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 
+#include "TMath.h"
+
 using namespace std;
 
 //_____________________________________________________________________________
@@ -30,8 +32,11 @@ EventReader::EventReader(DetectorConstruction *dc) :
   G4VUserPrimaryGeneratorAction(), fIev(0), 
   fUseBeam(0), fBeamE(18*GeV), fvertexRotY(0.0103371112*rad)
   ,fvertexPosX(0), fvertexPosY(0), fvertexPosZ(0)
+  ,fEmmX(0),fEmmY(0),flaserXY(0)
+  ,fvertexAlphaX(0),fvertexAlphaY(0)
+  ,fvertexBetaX(0),fvertexBetaY(0)
   ,fvertexSmearX(0),fvertexSmearY(0)
-  ,fvertexSmearCorrX(0),fvertexSmearCorrY(0)
+  ,fvertexSmearXp(0),fvertexSmearYp(0)
   ,fvertexSmearZ(0){
 
   //default input name
@@ -49,10 +54,13 @@ EventReader::EventReader(DetectorConstruction *dc) :
   fMsg->DeclarePropertyWithUnit("vertexPosY", "cm",fvertexPosY,"initial vertex position y");
   fMsg->DeclarePropertyWithUnit("vertexPosZ", "cm",fvertexPosZ,"initial vertex position z");
   fMsg->DeclarePropertyWithUnit("vertexRotY", "rad",fvertexRotY,"momentum direction rotation");
-  fMsg->DeclarePropertyWithUnit("vertexSmearX", "cm",fvertexSmearX,"trasnverseX vertex smearing width");
-  fMsg->DeclarePropertyWithUnit("vertexSmearY", "cm",fvertexSmearY,"trasnverseY vertex smearing width");
-  fMsg->DeclarePropertyWithUnit("vertexSmearCorrX", "rad",fvertexSmearCorrX,"trasnverseX vertex smearing pos-ang corr [rad/mm]");
-  fMsg->DeclarePropertyWithUnit("vertexSmearCorrY", "rad",fvertexSmearCorrY,"trasnverseY vertex smearing pos-ang corr [rad/mm]");
+  fMsg->DeclarePropertyWithUnit("vertexBetaX", "m",fvertexBetaX,"beta beam parameter for X");
+  fMsg->DeclarePropertyWithUnit("vertexBetaY", "m",fvertexBetaY,"beta beam parameter for Y");
+  fMsg->DeclarePropertyWithUnit("beamEmmX", "nm",fEmmX,"emmitance beam parameter for X");
+  fMsg->DeclarePropertyWithUnit("beamEmmY", "nm",fEmmY,"emmitance beam parameter for Y");
+  fMsg->DeclarePropertyWithUnit("laserXYwidth", "m",flaserXY,"laser transvserse width");
+  fMsg->DeclareProperty("vertexAlphaX", fvertexAlphaX,"alpha beam parameter for X");
+  fMsg->DeclareProperty("vertexAlphaY", fvertexAlphaY,"alpha beam parameter for Y");
   fMsg->DeclarePropertyWithUnit("vertexSmearZ" , "cm",fvertexSmearZ ,"longitudinal vertex smearing width");
 
 }//EventReader
@@ -66,26 +74,60 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     G4cout << "EventReader::GeneratePrimaries, event number: " << fIev << G4endl;
   }
 
-  //G4cout<<fvertexSmearXY<<" "<<fvertexSmearZ<<"\n"<<fvertexPosX<<" "<<fvertexPosY<<" "<<fvertexPosZ<<G4endl;
+  // G4cout << fvertexBetaX<< " "<<fvertexBetaY<< " "
+  // 	 << fvertexAlphaX<< " "<<fvertexAlphaY<< " "
+  // 	 << fEmmX<< " "<<fEmmY<< " "
+  // 	 << flaserXY<<G4endl;
+  // std::cin.ignore();
+
+  if( fvertexBetaX!=0 && fvertexAlphaX!=0 && 
+      fEmmX!=0 && fEmmY!=0 && 
+      fvertexBetaY!=0 && fvertexAlphaY!=0 && 
+      flaserXY!=0){
+    G4double probSample,probRandom;
+    do{
+      G4double x0 = G4RandGauss::shoot(0,sqrt(fEmmX));
+      G4double xp0 = G4RandGauss::shoot(0,sqrt(fEmmX));
+      fvertexSmearX = sqrt(fvertexBetaX)*x0;
+      fvertexSmearXp = - fvertexAlphaX*sqrt(1/fvertexBetaX)*x0 + xp0/sqrt(fvertexBetaX);
+      probSample = TMath::Gaus(fvertexSmearX,0,flaserXY,1);
+      G4double xl = G4RandGauss::shoot(0,flaserXY);
+      probRandom = TMath::Gaus(xl,0,flaserXY,1);
+      //G4cout<<"xl "<<xl<<" "<<probRandom<<" fv "<<fvertexSmearX<<" "<<probSample<<G4endl;
+    }while(probSample < probRandom);
+    // G4cout<<" "<<fvertexSmearX<<" "<<probSample<<" "<<probRandom<<G4endl;
+    // std::cin.ignore();
+
+    do{
+      G4double y0 = G4RandGauss::shoot(0,sqrt(fEmmY));
+      G4double yp0 = G4RandGauss::shoot(0,sqrt(fEmmY));
+      fvertexSmearY = sqrt(fvertexBetaY)*y0;
+      fvertexSmearYp = - fvertexAlphaY*sqrt(1/fvertexBetaY)*y0 + yp0/sqrt(fvertexBetaY);
+      probSample = TMath::Gaus(fvertexSmearY,0,flaserXY,1);
+      G4double yl = G4RandGauss::shoot(0,flaserXY);
+      probRandom = TMath::Gaus(yl,0,flaserXY,1);
+    }while(probSample < probRandom);
+
+  }
+
   G4double smearedVx(fvertexPosX),smearedVy(fvertexPosY),smearedVz(fvertexPosZ);
   if(fvertexSmearX!=0){
-    smearedVx = G4RandGauss::shoot(fvertexPosX,fvertexSmearX);
+    smearedVx += fvertexSmearX;
   }
   if(fvertexSmearY!=0){
-    smearedVy = G4RandGauss::shoot(fvertexPosY,fvertexSmearY);
+    smearedVy += fvertexSmearY;
   }
   if(fvertexSmearZ!=0){
     smearedVz = G4RandGauss::shoot(fvertexPosZ,fvertexSmearZ);
   }
+  G4double smearedRotX(fvertexSmearXp),smearedRotY(fvertexSmearYp);
 
   if(fUseBeam){
 
     G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
     G4ThreeVector momDir(0,0,-1);
-    double corrY = fvertexSmearCorrY * (smearedVx - fvertexPosX);
-    double corrX = fvertexSmearCorrX * (smearedVy - fvertexPosY);
-    momDir.rotateY(fvertexRotY+corrY);
-    momDir.rotateX(corrX);
+    momDir.rotateY(fvertexRotY+smearedRotX);
+    momDir.rotateX(smearedRotY);
 
     G4PrimaryParticle *part=new G4PrimaryParticle(11);
     part->SetMomentumDirection(momDir);
@@ -115,14 +157,12 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     fDetConst->getMCEvent()->SetUnpolXsec(uXsec);
 
     G4PrimaryVertex *vtx = new G4PrimaryVertex(smearedVx, smearedVy, smearedVz, 0);
-    double corrY = fvertexSmearCorrY * (smearedVx - fvertexPosX);
-    double corrX = fvertexSmearCorrX * (smearedVy - fvertexPosY);
 
     const int partID[2]={22,11};
     for(int i=0;i<2;i++){
       G4ThreeVector mom(partMomX[i]*GeV,partMomY[i]*GeV,partMomZ[i]*GeV);
-      mom.rotateY(fvertexRotY + acos(-1) + corrY);
-      mom.rotateX(corrX);
+      mom.rotateY(fvertexRotY + acos(-1) + smearedRotX);
+      mom.rotateX(smearedRotY);
 
       G4PrimaryParticle *part = new G4PrimaryParticle(partID[i],mom.x(),mom.y(),mom.z(),partE[i]*GeV);
       vtx->SetPrimary(part);
@@ -131,26 +171,6 @@ void EventReader::GeneratePrimaries(G4Event *evt) {
     evt->AddPrimaryVertex(vtx);
   }
 }//GeneratePrimaries
-
-/*
-//_____________________________________________________________________________
-void EventReader::ReadVertex(const std::string& line, G4double& vx, G4double& vy, G4double& vz, 
-			     G4double &uXsec, G4double &pXsec, int& ntrk) {
-
-  //vertex coordinates and number of tracks
-  stringstream ss(line);
-  string cc1;
-  int nevts;
-  ss>>cc1;
-  ss>>nevts;
-  ss>>ntrk;
-  ss>>vx;
-  ss>>vy;
-  ss>>vz;
-  ss>>uXsec;
-  ss>>pXsec;
-}//ReadVertex
-*/
 
 //_____________________________________________________________________________
 void EventReader::OpenInput() {
